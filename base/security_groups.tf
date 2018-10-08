@@ -1,6 +1,10 @@
+# General Security Groups
+#
+# - Base Security Group, that can be used to restrict the access only from Jump / Bastion
+# - Exasol Security Group, that will be attached to Exasol cluster nodes
+# - EMR Security Group, that will be attached to ingress rules of EMR cluster
 
-## General Base Security Groups {{{
-
+# Base Security Groups {{{
 # A base security group that is attached to all nodes
 # This can be adjusted only to allow traffic from bastion host if needed.
 resource "aws_security_group" "base_sg" {
@@ -27,11 +31,9 @@ resource "aws_security_group_rule" "ntp_egress" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.base_sg.id}"
 }
+# }}}
 
-## }}}
-
-## Exasol and EMR Security Groups {{{
-
+# Exasol and EMR Security Groups {{{
 # A Security Group for Exasol cluster nodes
 resource "aws_security_group" "exasol_sg" {
   name        = "exasol-sg"
@@ -59,8 +61,8 @@ resource "aws_security_group_rule" "ingress_exasol_emr_rule" {
 }
 
 # Similarly this will ensure that there is open traffic from emr to exasol cluster
-resource "aws_security_group_rule" "egress_emr_exasol_rule" {
-  type                     = "egress"
+resource "aws_security_group_rule" "ingress_emr_exasol_rule" {
+  type                     = "ingress"
   protocol                 = "-1"
   from_port                = 0
   to_port                  = 0
@@ -117,7 +119,17 @@ resource "aws_security_group_rule" "ingress_exasol_jdbc" {
   security_group_id = "${aws_security_group.exasol_sg.id}"
 }
 
-## }}}
+# Traffic within security group itself
+
+resource "aws_security_group_rule" "ingress_self" {
+  type              = "ingress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  self              = true
+  security_group_id = "${aws_security_group.exasol_sg.id}"
+}
+# }}}
 
 
 # vim:foldmethod=marker:foldlevel=0

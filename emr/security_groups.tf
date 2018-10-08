@@ -8,23 +8,30 @@ resource "aws_security_group" "master_sg" {
   revoke_rules_on_delete = true
 
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -36,9 +43,9 @@ resource "aws_security_group" "master_sg" {
 }
 
 resource "aws_security_group" "worker_sg" {
-  name = "emr-worker-sg-${var.project}-${var.environment}"
+  name        = "emr-worker-sg-${var.project}-${var.environment}"
   description = "Allow inbound outbound traffic for EMR Worker (Slave) nodes"
-  vpc_id = "${var.core_vpc}"
+  vpc_id      = "${var.core_vpc}"
 
   # Avoid circular dependencies which may stop the destroy of a cluster
   revoke_rules_on_delete = true
@@ -52,16 +59,16 @@ resource "aws_security_group" "worker_sg" {
   }
 
   ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
