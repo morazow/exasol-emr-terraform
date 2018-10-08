@@ -2,7 +2,7 @@
 resource "aws_emr_cluster" "emr_cluster" {
   name          = "emr-cluster-${var.project}-${var.environment}"
   release_label = "emr-5.17.0"
-  applications  = ["Spark", "Zeppelin", "Hive", "Hue"]
+  applications  = ["Hadoop", "HCatalog", "Hive", "Hue", "Spark", "Zeppelin"]
 
   ec2_attributes {
     key_name = "${var.key_name}"
