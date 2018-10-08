@@ -28,8 +28,6 @@ resource "aws_emr_cluster" "emr_cluster" {
 
   service_role = "${aws_iam_role.emr_service_role.arn}"
 
-  depends_on = ["aws_security_group.master_sg","aws_security_group.worker_sg"]
-
   tags = {
     Name        = "emr-cluster-${var.project}-${var.environment}"
     Project     = "${var.project}"
