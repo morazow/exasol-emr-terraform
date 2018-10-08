@@ -21,7 +21,7 @@ resource "aws_vpc" "core" {
 # }}}
 
 # Create a Core Internet Gateway {{{
-# to give subnets access to the outside world
+# to give subnets access to the outside world named internet
 resource "aws_internet_gateway" "core_gw" {
   vpc_id = "${aws_vpc.core.id}"
 
@@ -30,6 +30,27 @@ resource "aws_internet_gateway" "core_gw" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
+}
+# }}}
+
+# Core Routing Table {{{
+# Grants internet access to a VPC on its main route table
+# This is used in public subnets
+resource "aws_route_table" "core_rt_public" {
+  vpc_id    = "${aws_vpc.core.id}"
+
+  tags {
+    Name        = "route-table-core-public-${var.project}-${var.environment}"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_route" "core_route" {
+  route_table_id         = "${aws_route_table.core_rt_public.id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${aws_internet_gateway.core_gw.id}"
+  depends_on             = ["aws_internet_gateway.core_gw", "aws_route_table.core_rt_public"]
 }
 # }}}
 
@@ -61,32 +82,13 @@ resource "aws_subnet" "core_subnet_public_2" {
 }
 # }}}
 
-# Core Routing Table {{{
-# Grants internet access to a VPC on its main route table
-# This is used in public subnets
-resource "aws_route_table" "core_rt_public" {
-  vpc_id = "${aws_vpc.core.id}"
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.core_gw.id}"
-  }
-
-  tags {
-    Name        = "route-table-core-public-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-  }
-}
-# }}}
-
 # Routing Table - Public Subnet Association {{{
-resource "aws_route_table_association" "core-subnet-public-1-assoc" {
+resource "aws_route_table_association" "core_subnet_public_1_assoc" {
   subnet_id      = "${aws_subnet.core_subnet_public_1.id}"
   route_table_id = "${aws_route_table.core_rt_public.id}"
 }
 
-resource "aws_route_table_association" "core-subnet-public-2-assoc" {
+resource "aws_route_table_association" "core_subnet_public_2_assoc" {
   subnet_id      = "${aws_subnet.core_subnet_public_2.id}"
   route_table_id = "${aws_route_table.core_rt_public.id}"
 }
