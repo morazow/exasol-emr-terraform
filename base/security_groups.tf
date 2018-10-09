@@ -121,7 +121,7 @@ resource "aws_security_group_rule" "ingress_exasol_jdbc" {
 
 # Traffic within security group itself
 
-resource "aws_security_group_rule" "ingress_self" {
+resource "aws_security_group_rule" "ingress_exasol_self" {
   type              = "ingress"
   protocol          = "-1"
   from_port         = 0
@@ -129,6 +129,17 @@ resource "aws_security_group_rule" "ingress_self" {
   self              = true
   security_group_id = "${aws_security_group.exasol_sg.id}"
 }
+
+# Traffic outside
+resource "aws_security_group_rule" "egress_exasol" {
+  type              = "egress"
+  protocol          = "-1"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.exasol_sg.id}"
+}
+
 # }}}
 
 
