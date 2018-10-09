@@ -142,5 +142,17 @@ resource "aws_security_group_rule" "egress_exasol" {
 
 # }}}
 
+resource "null_resource" "exasol_sg_waited_on" {
+  depends_on = [
+    "aws_security_group.exasol_sg",
+    "aws_security_group_rule.ingress_exasol_http",
+    "aws_security_group_rule.ingress_exasol_https",
+    "aws_security_group_rule.ingress_exasol_bucketfs_http",
+    "aws_security_group_rule.ingress_exasol_bucketfs_https",
+    "aws_security_group_rule.ingress_exasol_jdbc",
+    "aws_security_group_rule.ingress_exasol_self",
+    "aws_security_group_rule.egress_exasol"
+  ]
+}
 
 # vim:foldmethod=marker:foldlevel=0
