@@ -56,9 +56,18 @@ the correct aws profile name and other variables.
 An example configurations:
 
 ```hcl
-profile     = "exasol"
-project     = "mor-exa-test"
-environment = "staging"
+profile                   = "exasol"
+project                   = "mor-exa-test"
+environment               = "staging"
+exa_db_password           = "my-awesome-password"
+exa_db_node_count         = "3"
+exa_db_replication_factor = "1"
+exa_db_standby_node       = "0"
+emr_release_label         = "5.17.0"
+emr_master_type           = "m4.xlarge"
+emr_master_count          = "1"
+emr_core_type             = "m4.2xlarge"
+emr_core_count            = "3"
 ```
 
 You can use Makefile command to create the clusters.

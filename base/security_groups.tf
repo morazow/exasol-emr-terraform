@@ -142,6 +142,7 @@ resource "aws_security_group_rule" "egress_exasol" {
 
 # }}}
 
+# Waited resource for Exasol Security Groups {{{
 resource "null_resource" "exasol_sg_waited_on" {
   depends_on = [
     "aws_security_group.exasol_sg",
@@ -154,5 +155,7 @@ resource "null_resource" "exasol_sg_waited_on" {
     "aws_security_group_rule.egress_exasol"
   ]
 }
+# }}}
+
 
 # vim:foldmethod=marker:foldlevel=0

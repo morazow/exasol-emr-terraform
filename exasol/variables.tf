@@ -7,6 +7,22 @@ variable "environment" {
   type    = "string"
 }
 
+variable "db_password" {
+  type    = "string"
+}
+
+variable "db_node_count" {
+  type    = "string"
+}
+
+variable "db_replication" {
+  type    = "string"
+}
+
+variable "db_standby_node" {
+  type    = "string"
+}
+
 variable "key_name" {
   type    = "string"
 }

@@ -7,13 +7,13 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
 
   parameters {
     DBSystemName      = "exadb"
-    DBPassword        = "exasol1"
-    ExasolPassword    = "exasol1"
+    DBPassword        = "${var.db_password}"
+    ExasolPassword    = "${var.db_password}"
     DBSecurityGroup   = "${var.exasol_sg}"
     PublicSubnetId    = "${var.public_subnet_1}"
-    DBNodeCount       = 3
-    ReplicationFactor = 1
-    StandbyNode       = 0
+    DBNodeCount       = "${var.db_node_count}"
+    ReplicationFactor = "${var.db_replication}"
+    StandbyNode       = "${var.db_standby_node}"
     KeyName           = "${var.key_name}"
     ImageId           = "EXASOL-6.0.6-4-BYOL"
     License           = "${file("${path.module}/byol_license.xml")}"
