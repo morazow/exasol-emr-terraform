@@ -16,6 +16,7 @@ resource "aws_vpc" "core" {
     Name        = "vpc-core-${var.project}-${var.environment}"
     Project     = "${var.project}"
     Environment = "${var.environment}"
+    WaitedOn    = "${var.waited_on}"
   }
 }
 # }}}
@@ -91,6 +92,24 @@ resource "aws_route_table_association" "core_subnet_public_1_assoc" {
 resource "aws_route_table_association" "core_subnet_public_2_assoc" {
   subnet_id      = "${aws_subnet.core_subnet_public_2.id}"
   route_table_id = "${aws_route_table.core_rt_public.id}"
+}
+# }}}
+
+# Resources dependent from other modules {{{
+resource "null_resource" "exasol_waited_on" {
+  depends_on = [
+    "aws_route.core_route",
+    "aws_subnet.core_subnet_public_1",
+    "aws_route_table_association.core_subnet_public_1_assoc",
+  ]
+}
+
+resource "null_resource" "emr_waited_on" {
+  depends_on = [
+    "aws_route.core_route",
+    "aws_subnet.core_subnet_public_2",
+    "aws_route_table_association.core_subnet_public_2_assoc"
+  ]
 }
 # }}}
 

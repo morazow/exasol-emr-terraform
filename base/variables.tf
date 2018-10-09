@@ -10,3 +10,7 @@ variable "project" {
 variable "environment" {
   type    = "string"
 }
+
+variable "waited_on" {
+  type = "string"
+}

@@ -15,6 +15,7 @@ module "base" {
   region      = "${var.region}"
   project     = "${var.project}"
   environment = "${var.environment}"
+  waited_on   = "${module.ssh.waited_on}"
 }
 
 module "exasol" {
@@ -26,6 +27,7 @@ module "exasol" {
   base_sg         = "${module.base.base_sg}"
   public_subnet_1 = "${module.base.public_subnet_1}"
   exasol_sg       = "${module.base.exasol_sg}"
+  waited_on       = "${module.base.exasol_waited_on}"
 }
 
 module "emr" {
@@ -36,4 +38,5 @@ module "emr" {
   core_vpc        = "${module.base.core_vpc}"
   public_subnet_2 = "${module.base.public_subnet_2}"
   exasol_emr_sg   = "${module.base.emr_sg}"
+  waited_on       = "${module.base.emr_waited_on}"
 }

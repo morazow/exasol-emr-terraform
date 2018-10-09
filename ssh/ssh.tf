@@ -18,3 +18,11 @@ resource "aws_key_pair" "deployer" {
   key_name   = "${var.project}-${var.environment}"
   public_key = "${tls_private_key.ssh_private_key.public_key_openssh}"
 }
+
+resource "null_resource" "waited_on" {
+  depends_on = [
+    "local_file.ssh_private_key",
+    "local_file.ssh_public_key",
+    "aws_key_pair.deployer"
+  ]
+}

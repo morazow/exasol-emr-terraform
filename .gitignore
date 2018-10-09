@@ -1,5 +1,7 @@
 .terraform/
 config.tfvars
+emr.tfplan
+exasol.tfplan
 terraform.tfplan
 terraform.tfstate
 terraform.tfstate.backup

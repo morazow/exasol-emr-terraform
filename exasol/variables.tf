@@ -26,3 +26,7 @@ variable "public_subnet_1" {
 variable "exasol_sg" {
   type = "string"
 }
+
+variable "waited_on" {
+  type = "string"
+}

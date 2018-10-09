@@ -23,5 +23,6 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
     Name        = "exasol-cf-stack-${var.project}-${var.environment}"
     Project     = "${var.project}"
     Environment = "${var.environment}"
+    WaitedOn    = "${var.waited_on}"
   }
 }

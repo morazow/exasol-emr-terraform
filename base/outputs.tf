@@ -22,3 +22,11 @@ output "exasol_sg" {
 output "emr_sg" {
   value = "${aws_security_group.emr_sg.id}"
 }
+
+output "exasol_waited_on" {
+  value = "${null_resource.exasol_waited_on.id}"
+}
+
+output "emr_waited_on" {
+  value = "${null_resource.emr_waited_on.id}"
+}

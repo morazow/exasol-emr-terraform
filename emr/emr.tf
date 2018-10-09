@@ -32,5 +32,6 @@ resource "aws_emr_cluster" "emr_cluster" {
     Name        = "emr-cluster-${var.project}-${var.environment}"
     Project     = "${var.project}"
     Environment = "${var.environment}"
+    WaitedOn    = "${var.waited_on}"
   }
 }

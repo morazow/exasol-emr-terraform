@@ -22,3 +22,7 @@ variable "public_subnet_2" {
 variable "exasol_emr_sg" {
   type = "string"
 }
+
+variable "waited_on" {
+  type = "string"
+}
