@@ -35,3 +35,86 @@ resource "aws_emr_cluster" "emr_cluster" {
     WaitedOn    = "${var.waited_on}"
   }
 }
+
+data "template_file" "exa_etl_import_template" {
+  template = "${file("${path.module}/templates/exa_etl_import.sh.tpl")}"
+
+  vars = {
+    exa_password  = "${var.exa_db_password}"
+  }
+}
+
+resource "null_resource" "emr_master_configs" {
+
+  connection {
+    type = "ssh"
+    user        = "hadoop"
+    host        = "${aws_emr_cluster.emr_cluster.master_public_dns}"
+    private_key = "${var.key_pem_file}"
+    timeout     = "20m"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p $HOME/scripts",
+      "mkdir -p $HOME/exaplus"
+    ]
+  }
+
+  # Copy ETL Import Related Templates & Files
+
+  triggers = {
+    template = "${data.template_file.exa_etl_import_template.rendered}"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.exa_etl_import_template.rendered}"
+    destination = "$HOME/scripts/exa_etl_import.sh"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/retail.sql"
+    destination = "$HOME/scripts/retail.sql"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/udf_debug.py"
+    destination = "$HOME/scripts/udf_debug.py"
+  }
+
+  provisioner "file" {
+    source      = "${path.module}/files/bootstrap_user_keys.sh"
+    destination = "$HOME/scripts/bootstrap_user_keys.sh"
+  }
+
+  # Add authorized ssh public keys
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x $HOME/scripts/bootstrap_user_keys.sh",
+      "$HOME/scripts/bootstrap_user_keys.sh"
+    ]
+  }
+
+  # Install EXAPlus
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo yum install -y tmux curl wget",
+      "wget https://www.exasol.com/support/secure/attachment/63966/EXAplus-6.0.10.tar.gz",
+      "tar zxv --exclude='doc' -f EXAplus-6.0.10.tar.gz",
+      "mv EXAplus-6.0.10/exaplus EXAplus-6.0.10/*.jar exaplus",
+      "rm -rf EXAplus-6.0.10*"
+    ]
+  }
+
+  # Create hive tables and make exa_etl_import.sh executable
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x $HOME/scripts/exa_etl_import.sh",
+      "hive -f $HOME/scripts/retail.sql"
+    ]
+  }
+
+}

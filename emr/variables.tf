@@ -35,6 +35,10 @@ variable "key_name" {
   type    = "string"
 }
 
+variable "key_pem_file" {
+  type    = "string"
+}
+
 variable "core_vpc" {
   type = "string"
 }

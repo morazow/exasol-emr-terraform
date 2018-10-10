@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+# Set exaplus executable PATH
+export PATH="$HOME/exaplus:$PATH"
+
+# Obtain master node ip (also hive metastore ip) for ETL import connection
+MASTER_NODE_IP=$(curl --silent http://169.254.169.254/latest/meta-data/local-ipv4)
+
+cat <<-EOF > /tmp/exa-hadoop-etl.sql
+DROP SCHEMA IF EXISTS ETL CASCADE;
+CREATE SCHEMA ETL;
+OPEN SCHEMA ETL;
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_HCAT_TABLE(...) EMITS (...) AS
+%scriptclass com.exasol.hadoop.scriptclasses.ImportHCatTable;
+%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_HIVE_TABLE_FILES(...) EMITS (...) AS
+%env LD_LIBRARY_PATH=/tmp/;
+%scriptclass com.exasol.hadoop.scriptclasses.ImportHiveTableFiles;
+%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+/
+
+CREATE OR REPLACE JAVA SCALAR SCRIPT HCAT_TABLE_FILES(...) EMITS (
+  hdfs_server_port VARCHAR(200),
+  hdfspath VARCHAR(200),
+  hdfs_user_or_service_principal VARCHAR(100),
+  hcat_user_or_service_principal VARCHAR(100),
+  input_format VARCHAR(200),
+  serde VARCHAR(200),
+  column_info VARCHAR(100000),
+  partition_info VARCHAR(10000),
+  serde_props VARCHAR(10000),
+  import_partition INT,
+  auth_type VARCHAR(1000),
+  conn_name VARCHAR(1000),
+  output_columns VARCHAR(100000),
+  enable_rpc_encryption VARCHAR(100),
+  debug_address VARCHAR(200))
+AS
+%scriptclass com.exasol.hadoop.scriptclasses.HCatTableFiles;
+%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+/
+
+
+DROP SCHEMA IF EXISTS CASCADE TEST;
+CREATE SCHEMA TEST;
+OPEN SCHEMA TEST;
+
+DROP TABLE IF EXISTS SALES_POSITIONS;
+
+CREATE TABLE SALES_POSITIONS (
+  SALES_ID    DECIMAL(18,0),
+  POSITION_ID DECIMAL(9,0),
+  ARTICLE_ID  DECIMAL(9,0),
+  AMOUNT      DECIMAL(9,0),
+  PRICE       DECIMAL(9,2),
+  VOUCHER_ID  DECIMAL(9,0),
+  CANCELED    BOOLEAN
+);
+
+-- ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$MASTER_NODE_IP:3000';
+
+IMPORT INTO SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_HCAT_TABLE WITH
+  HCAT_DB         = 'default'
+  HCAT_TABLE      = 'sales_positions'
+  HCAT_ADDRESS    = 'thrift://$MASTER_NODE_IP:9083'
+  HCAT_USER       = 'hive'
+  HDFS_USER       = 'hdfs'
+  PARALLELISM     = 'nproc()*10';
+
+SELECT * FROM SALES_POSITIONS LIMIT 10;
+EOF
+
+exaplus -c 10.0.0.11:8563 -u sys -P ${exa_password} -f /tmp/exa-hadoop-etl.sql
