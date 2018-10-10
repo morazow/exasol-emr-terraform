@@ -45,9 +45,14 @@ want to update it later.
 
 ### Install Terraform
 
-You can follow the instructions [here][terraform-install].
+In order to install Terraform, you can follow the instructions from
+[here][terraform-install].
 
 ## Usage
+
+Please follow these steps for quick start usage.
+
+### Configuration Params
 
 Copy the configuration file [`config.tfvars.example`](./config.tfvars.example)
 to `config.tfvars` and modify the parameters inside it. Make sure you provide
@@ -70,19 +75,64 @@ emr_core_type             = "m4.2xlarge"
 emr_core_count            = "3"
 ```
 
+### User Public SSH Keys
+
+Additionally you can add public ssh keys so that you can ssh to EMR master node
+without providing private pem file.
+
+Edit file [`bootstrap_user_keys.sh`](./bootstrap_user_keys.sh) as follows:
+
+```bash
+#!/bin/bash
+
+cat <<EOT >> ~/.ssh/authorized_keys
+ssh-rsa SSH_PUBLIC_KEY <username>
+#
+# ADD MORE HERE
+#
+EOT
+```
+
+Then you can easily ssh into emr master node:
+
+```bash
+ssh hadoop@$(terraform output out-emr-master-dns)
+```
+
+Similarly with socks proxy enabled:
+
+```bash
+ssh -D 8157 hadoop@$(terraform output out-emr-master-dns)
+```
+
+### Makefile
+
 You can use Makefile command to create the clusters.
 
-| Command      | Description
-|:-------------|:-------------------------------------------------|
-|`make`        |runs terraform `init`, `plan` and `apply`         |
-|`make init`   |`terraform init`, run this if it is the first run |
-|`make update` |`terraform update`                                |
-|`make plan`   |`terraform plan`                                  |
-|`make apply`  |`terraform apply`, create both clusters           |
-|`make destroy`|`terraform destroy`, destroy everything           |
-|`make exasol` |create only Exasol cluster                        |
-|`make emr`    |create only EMR cluster                           |
-|`make clean`  |remove plan or generated files                    |
+| Command              | Description
+|:---------------------|:-------------------------------------------------|
+|`make`                |runs terraform `init`, `plan` and `apply`         |
+|`make init`           |`terraform init`, run this if it is the first run |
+|`make update`         |`terraform update`                                |
+|`make plan`           |`terraform plan`                                  |
+|`make apply`          |`terraform apply`, create both clusters           |
+|`make destroy`        |`terraform destroy`, destroy everything           |
+|`make exasol`         |create only Exasol cluster                        |
+|`make emr`            |create only EMR cluster                           |
+|`make clean`          |remove plan or generated files                    |
+|`make run-etl-import` |runs etl loader scripts to populate Exasol tables |
+
+## Manual Steps
+
+This is not fully automated yet, there are still some manual steps you need to
+follow. Some of them are:
+
+- Open Exasol BucketFS http & https ports
+- Create an Exasol bucket
+- Upload jars to Exasol buckets
+- Run ETL loader scripts to populate Exasol tables `make run-etl-import`;
+  however, for this to work ETL jars should be uploaded to bucket
+  `/buckets/bfsdefault/bucket1/`.
 
 ## License
 
