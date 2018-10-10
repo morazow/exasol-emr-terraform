@@ -46,6 +46,15 @@ data "template_file" "exa_etl_import_template" {
 
 resource "null_resource" "emr_master_configs" {
 
+  # Should we run this resource on second `terraform apply`?
+  triggers = {
+    # Yes, if template file changes
+    template      = "${data.template_file.exa_etl_import_template.rendered}"
+    # Yes, if one these files change
+    file_retail   = "${sha1(file("${path.module}/files/retail.sql"))}"
+    file_userkeys = "${sha1(file("${path.module}/files/bootstrap_user_keys.sh"))}"
+  }
+
   connection {
     type = "ssh"
     user        = "hadoop"
@@ -62,10 +71,6 @@ resource "null_resource" "emr_master_configs" {
   }
 
   # Copy ETL Import Related Templates & Files
-
-  triggers = {
-    template = "${data.template_file.exa_etl_import_template.rendered}"
-  }
 
   provisioner "file" {
     content     = "${data.template_file.exa_etl_import_template.rendered}"
