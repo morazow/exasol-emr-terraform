@@ -68,7 +68,7 @@ exa_db_password           = "my-awesome-password"
 exa_db_node_count         = "3"
 exa_db_replication_factor = "1"
 exa_db_standby_node       = "0"
-emr_release_label         = "5.17.0"
+emr_release_label         = "emr-5.17.0"
 emr_master_type           = "m4.xlarge"
 emr_master_count          = "1"
 emr_core_type             = "m4.2xlarge"
@@ -130,6 +130,8 @@ follow. Some of them are:
 - Open Exasol BucketFS http & https ports
 - Create an Exasol bucket
 - Upload jars to Exasol buckets
+- Run Hive tables creations using `make run-hive`. This creates hive tables in
+  HDFS that will be loaded to Exasol later.
 - Run ETL loader scripts to populate Exasol tables `make run-etl-import`;
   however, for this to work ETL jars should be uploaded to bucket
   `/buckets/bfsdefault/bucket1/`.

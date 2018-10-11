@@ -97,7 +97,8 @@ resource "null_resource" "emr_master_configs" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x $HOME/scripts/bootstrap_user_keys.sh",
-      "$HOME/scripts/bootstrap_user_keys.sh"
+      "$HOME/scripts/bootstrap_user_keys.sh",
+      "rm -rf $HOME/scripts/bootstrap_user_keys.sh"
     ]
   }
 
@@ -113,12 +114,11 @@ resource "null_resource" "emr_master_configs" {
     ]
   }
 
-  # Create hive tables and make exa_etl_import.sh executable
+  # Make exa_etl_import.sh executable
 
   provisioner "remote-exec" {
     inline = [
       "chmod +x $HOME/scripts/exa_etl_import.sh",
-      "hive -f $HOME/scripts/retail.sql"
     ]
   }
 
