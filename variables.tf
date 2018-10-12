@@ -16,6 +16,14 @@ variable "environment" {
   type    = "string"
 }
 
+variable "exa_image_id" {
+  type    = "string"
+}
+
+variable "exa_license_file_path" {
+  type    = "string"
+}
+
 variable "exa_db_password" {
   type    = "string"
 }

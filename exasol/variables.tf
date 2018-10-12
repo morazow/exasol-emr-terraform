@@ -7,6 +7,14 @@ variable "environment" {
   type    = "string"
 }
 
+variable "image_id" {
+  type    = "string"
+}
+
+variable "license_file_path" {
+  type    = "string"
+}
+
 variable "db_password" {
   type    = "string"
 }
@@ -15,7 +23,7 @@ variable "db_node_count" {
   type    = "string"
 }
 
-variable "db_replication" {
+variable "db_replication_factor" {
   type    = "string"
 }
 

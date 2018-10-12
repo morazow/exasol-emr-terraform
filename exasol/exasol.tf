@@ -3,7 +3,7 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
   name          = "exasol-stack-${var.project}-${var.environment}"
   capabilities  = ["CAPABILITY_IAM"]
   on_failure    = "DELETE"
-  template_body = "${file("${path.module}/exasol_cf.yml")}"
+  template_body = "${file("${path.module}/exasol_cloudformation.yml")}"
 
   parameters {
     DBSystemName      = "exadb"
@@ -12,11 +12,11 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
     DBSecurityGroup   = "${var.exasol_sg}"
     PublicSubnetId    = "${var.public_subnet_1}"
     DBNodeCount       = "${var.db_node_count}"
-    ReplicationFactor = "${var.db_replication}"
+    ReplicationFactor = "${var.db_replication_factor}"
     StandbyNode       = "${var.db_standby_node}"
     KeyName           = "${var.key_name}"
-    ImageId           = "EXASOL-6.0.6-4-BYOL"
-    License           = "${file("${path.module}/byol_license.xml")}"
+    ImageId           = "${var.image_id}"
+    License           = "${file("${var.license_file_path}")}"
   }
 
   tags = {
