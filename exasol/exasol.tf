@@ -6,17 +6,18 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
   template_body = "${file("${path.module}/exasol_cloudformation.yml")}"
 
   parameters {
-    DBSystemName      = "exadb"
-    DBPassword        = "${var.db_password}"
-    ExasolPassword    = "${var.db_password}"
-    DBSecurityGroup   = "${var.exasol_sg}"
-    PublicSubnetId    = "${var.public_subnet_1}"
-    DBNodeCount       = "${var.db_node_count}"
-    ReplicationFactor = "${var.db_replication_factor}"
-    StandbyNode       = "${var.db_standby_node}"
-    KeyName           = "${var.key_name}"
-    ImageId           = "${var.image_id}"
-    License           = "${file("${var.license_file_path}")}"
+    DBSystemName             = "exadb"
+    DBPassword               = "${var.db_password}"
+    ExasolPassword           = "${var.db_password}"
+    DBSecurityGroup          = "${var.exasol_sg}"
+    PublicSubnetId           = "${var.public_subnet_1}"
+    DatabaseNodeInstanceType = "m4.4xlarge"
+    DBNodeCount              = "${var.db_node_count}"
+    ReplicationFactor        = "${var.db_replication_factor}"
+    StandbyNode              = "${var.db_standby_node}"
+    KeyName                  = "${var.key_name}"
+    ImageId                  = "${var.image_id}"
+    License                  = "${file("${var.license_file_path}")}"
   }
 
   tags = {
