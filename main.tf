@@ -46,6 +46,8 @@ module "emr" {
   master_count          = "${var.emr_master_count}"
   core_type             = "${var.emr_core_type}"
   core_count            = "${var.emr_core_count}"
+  aws_s3_access_key     = "${var.aws_s3_access_key}"
+  aws_s3_secret_key     = "${var.aws_s3_secret_key}"
   key_name              = "${module.ssh.deployer_key_name}"
   key_pem_file          = "${module.ssh.deployer_key_pem}"
   core_vpc              = "${module.base.core_vpc}"

@@ -11,6 +11,14 @@ variable "exa_db_password" {
   type    = "string"
 }
 
+variable "aws_s3_access_key" {
+  type    = "string"
+}
+
+variable "aws_s3_secret_key" {
+  type    = "string"
+}
+
 variable "release_label" {
   type    = "string"
 }

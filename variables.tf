@@ -59,3 +59,11 @@ variable "emr_core_type" {
 variable "emr_core_count" {
   type    = "string"
 }
+
+variable "aws_s3_access_key" {
+  type    = "string"
+}
+
+variable "aws_s3_secret_key" {
+  type    = "string"
+}
