@@ -38,6 +38,11 @@ run-etl-import:
 	ssh hadoop@$$(terraform output out-emr-master-dns) '/home/hadoop/scripts/exa_etl_import.sh'
 	@echo "ETL_END = $$(date '+%H:%M:%S')"
 
+run-s3etl-import:
+	@echo "S3_ETL_START = $$(date '+%H:%M:%S')"
+	ssh hadoop@$$(terraform output out-emr-master-dns) '/home/hadoop/scripts/exa_s3etl_import.sh'
+	@echo "S3_ETL_END = $$(date '+%H:%M:%S')"
+
 clean:
 	rm -rf terraform.tfplan exasol.tfplan emr.tfplan generated/
 

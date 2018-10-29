@@ -6,4 +6,3 @@ terraform.tfplan
 terraform.tfstate
 terraform.tfstate.backup
 generated/
-mor_byol_license.xml
