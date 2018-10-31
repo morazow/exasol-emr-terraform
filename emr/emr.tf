@@ -32,6 +32,11 @@ resource "aws_emr_cluster" "emr_cluster" {
     instance_role = "CORE"
     instance_type = "${var.core_type}"
     instance_count = "${var.core_count}"
+    ebs_config {
+      size = "${var.core_ebs_size}"
+      type = "gp2"
+      volumes_per_instance = 1
+    }
   }
 
   service_role = "${aws_iam_role.emr_service_role.arn}"

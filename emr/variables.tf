@@ -39,6 +39,10 @@ variable "core_count" {
   type    = "string"
 }
 
+variable "core_ebs_size" {
+  default = "80"
+}
+
 variable "key_name" {
   type    = "string"
 }
