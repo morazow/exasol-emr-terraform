@@ -7,6 +7,7 @@ exa_image_id              = "" # EXASOL-6.0.6-4-BYOL or EXASOL-6.0.6-4
 exa_license_file_path     = "" # used only if imageId is BYOL
 exa_db_password           = ""
 exa_db_node_count         = "3"
+exa_db_node_type          = "m4.2xlarge"
 exa_db_replication_factor = "1"
 exa_db_standby_node       = "0"
 emr_release_label         = "emr-5.17.0"

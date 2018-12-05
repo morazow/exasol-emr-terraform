@@ -26,6 +26,7 @@ module "exasol" {
   license_file_path     = "${var.exa_license_file_path}"
   db_password           = "${var.exa_db_password}"
   db_node_count         = "${var.exa_db_node_count}"
+  db_node_type          = "${var.exa_db_node_type}"
   db_replication_factor = "${var.exa_db_replication_factor}"
   db_standby_node       = "${var.exa_db_standby_node}"
   key_name              = "${module.ssh.deployer_key_name}"

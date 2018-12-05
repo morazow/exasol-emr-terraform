@@ -32,6 +32,10 @@ variable "exa_db_node_count" {
   type    = "string"
 }
 
+variable "exa_db_node_type" {
+  type    = "string"
+}
+
 variable "exa_db_replication_factor" {
   type    = "string"
 }

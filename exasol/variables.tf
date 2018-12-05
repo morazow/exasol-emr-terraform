@@ -23,6 +23,10 @@ variable "db_node_count" {
   type    = "string"
 }
 
+variable "db_node_type" {
+  type    = "string"
+}
+
 variable "db_replication_factor" {
   type    = "string"
 }
