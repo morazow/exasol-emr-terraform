@@ -44,10 +44,11 @@ resource "aws_emr_cluster" "emr_cluster" {
   configurations = "${data.template_file.emr_configurations.rendered}"
 
   tags = {
-    Name        = "emr-cluster-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-    WaitedOn    = "${var.waited_on}"
+    Name          = "emr-cluster-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+    WaitedOn      = "${var.waited_on}"
   }
 }
 

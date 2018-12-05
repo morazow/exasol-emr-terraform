@@ -36,9 +36,10 @@ resource "aws_security_group" "master_sg" {
   }
 
   tags {
-    Name        = "emr-master-sg-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "emr-master-sg-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }
 
@@ -73,8 +74,9 @@ resource "aws_security_group" "worker_sg" {
   }
 
   tags {
-    Name        = "emr-worker-sg-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "emr-worker-sg-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }

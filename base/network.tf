@@ -13,10 +13,11 @@ resource "aws_vpc" "core" {
   enable_dns_hostnames = "true"
 
   tags = {
-    Name        = "vpc-core-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-    WaitedOn    = "${var.waited_on}"
+    Name          = "vpc-core-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+    WaitedOn      = "${var.waited_on}"
   }
 }
 # }}}
@@ -27,9 +28,10 @@ resource "aws_internet_gateway" "core_gw" {
   vpc_id = "${aws_vpc.core.id}"
 
   tags = {
-    Name        = "gateway-core-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "gateway-core-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }
 # }}}
@@ -41,9 +43,10 @@ resource "aws_route_table" "core_rt_public" {
   vpc_id    = "${aws_vpc.core.id}"
 
   tags {
-    Name        = "route-table-core-public-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "route-table-core-public-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }
 
@@ -63,9 +66,10 @@ resource "aws_subnet" "core_subnet_public_1" {
   map_public_ip_on_launch = "true"
 
   tags {
-    Name        = "subnet-public-1-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "subnet-public-1-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }
 
@@ -76,9 +80,10 @@ resource "aws_subnet" "core_subnet_public_2" {
   map_public_ip_on_launch = "true"
 
   tags {
-    Name        = "subnet-public-2-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
+    Name          = "subnet-public-2-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
   }
 }
 # }}}

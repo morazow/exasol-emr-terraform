@@ -11,6 +11,13 @@ resource "aws_security_group" "base_sg" {
   name        = "base"
   description = "Allow basic inbound outbound traffic"
   vpc_id      = "${aws_vpc.core.id}"
+
+  tags {
+    Name          = "base-sg-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+  }
 }
 
 # Add this to all instance that sent traffic to outside
@@ -39,6 +46,13 @@ resource "aws_security_group" "exasol_sg" {
   name        = "exasol-sg"
   description = "Allow inbound traffic, use this group only for a exasol node"
   vpc_id      = "${aws_vpc.core.id}"
+
+  tags {
+    Name          = "exasol-sg-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+  }
 }
 
 # A Security Group for EMR cluser nodes
@@ -46,6 +60,13 @@ resource "aws_security_group" "emr_sg" {
   name        = "emr-sg"
   description = "Allow inbound traffic, use this group only for a emr node"
   vpc_id      = "${aws_vpc.core.id}"
+
+  tags {
+    Name          = "emr-sg-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+  }
 }
 
 # Rules defining traffic between Exasol <-> EMR instances

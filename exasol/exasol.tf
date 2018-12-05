@@ -11,7 +11,7 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
     ExasolPassword           = "${var.db_password}"
     DBSecurityGroup          = "${var.exasol_sg}"
     PublicSubnetId           = "${var.public_subnet_1}"
-    DatabaseNodeInstanceType = "m4.4xlarge"
+    DatabaseNodeInstanceType = "m4.2xlarge"
     DBNodeCount              = "${var.db_node_count}"
     ReplicationFactor        = "${var.db_replication_factor}"
     StandbyNode              = "${var.db_standby_node}"
@@ -21,9 +21,10 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
   }
 
   tags = {
-    Name        = "exasol-cf-stack-${var.project}-${var.environment}"
-    Project     = "${var.project}"
-    Environment = "${var.environment}"
-    WaitedOn    = "${var.waited_on}"
+    Name          = "exasol-cf-stack-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+    WaitedOn      = "${var.waited_on}"
   }
 }

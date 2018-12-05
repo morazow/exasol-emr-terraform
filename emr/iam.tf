@@ -23,6 +23,13 @@ resource "aws_iam_role" "emr_service_role" {
   ]
 }
 EOF
+
+  tags = {
+    Name          = "emr-service-role-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+  }
 }
 
 # Attach default EMR service policy
@@ -51,6 +58,13 @@ resource "aws_iam_role" "emr_profile_role" {
   ]
 }
 EOF
+
+  tags = {
+    Name          = "emr-profile-role-${var.project}-${var.environment}"
+    Project       = "${var.project}"
+    "exa:project" = "${var.project}"
+    Environment   = "${var.environment}"
+  }
 }
 
 # Attach default EC2 profile policy

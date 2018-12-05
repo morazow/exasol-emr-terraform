@@ -70,7 +70,7 @@ An example configurations:
 
 ```hcl
 profile                   = "exasol"
-project                   = "mor-exa-test"
+project                   = "SPRKCT"
 environment               = "staging"
 exa_image_id              = "EXASOL-6.0.6-4-BYOL"
 exa_license_file_path     = "./mor_byol_license.xml"
@@ -179,6 +179,8 @@ The following Terraform configuration variables should be provided.
 |``emr_master_count``          |``1``          |The number of master nodes for EMR cluster                              |
 |``emr_core_type``             |``m4.2xlarge`` |An EC2 instance type for EMR cluster core nodes                         |
 |``emr_core_count``            |``3``          |The number of core nodes for EMR cluster                                |
+
+The `project` configuration variable is also used to create a `exa:project` tag.
 
 ## Manual Steps
 
