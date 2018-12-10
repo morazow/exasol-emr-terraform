@@ -79,7 +79,7 @@ exa_db_node_count         = "3"
 exa_db_node_type          = "m4.2xlarge"
 exa_db_replication_factor = "1"
 exa_db_standby_node       = "0"
-emr_release_label         = "emr-5.17.0"
+emr_release_label         = "emr-5.19.0"
 emr_master_type           = "m4.xlarge"
 emr_master_count          = "1"
 emr_core_type             = "m4.2xlarge"
@@ -175,7 +175,7 @@ The following Terraform configuration variables should be provided.
 |``exa_db_node_count``         |``3``          |The number nodes for Exasol cluster                                     |
 |``exa_db_replication_factor`` |``1``          |A replication factor for Exasol cluster                                 |
 |``exa_db_standby_node``       |``0``          |The number of standby nodes for Exasol cluster                          |
-|``emr_release_label``         |``emr-5.17.0`` |A release version for EMR cluster                                       |
+|``emr_release_label``         |``emr-5.19.0`` |A release version for EMR cluster                                       |
 |``emr_master_type``           |``m4.xlarge``  |An EC2 instance type for EMR cluster master node                        |
 |``emr_master_count``          |``1``          |The number of master nodes for EMR cluster                              |
 |``emr_core_type``             |``m4.2xlarge`` |An EC2 instance type for EMR cluster core nodes                         |
