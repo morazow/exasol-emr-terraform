@@ -6,7 +6,7 @@ export PATH="$HOME/exaplus:$PATH"
 # Obtain master node ip (also hive metastore ip) for ETL import connection
 MASTER_NODE_IP=$(curl --silent http://169.254.169.254/latest/meta-data/local-ipv4)
 
-cat <<-EOF > /tmp/exa-hadoop-etl.sql
+cat <<-EOF > /tmp/exa-etl-scripts.sql
 DROP SCHEMA IF EXISTS ETL CASCADE;
 CREATE SCHEMA ETL;
 OPEN SCHEMA ETL;
@@ -41,6 +41,23 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT HCAT_TABLE_FILES(...) EMITS (
 AS
 %scriptclass com.exasol.hadoop.scriptclasses.HCatTableFiles;
 %jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_PATH(...) EMITS (...) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportPath;
+%jar /buckets/bfsdefault/bucket1/cloud-etl.jar;
+/
+
+CREATE OR REPLACE JAVA SET SCRIPT IMPORT_FILES(...) EMITS (...) AS
+%env LD_LIBRARY_PATH=/tmp/;
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportFiles;
+%jar /buckets/bfsdefault/bucket1/cloud-etl.jar;
+/
+
+CREATE OR REPLACE JAVA SCALAR SCRIPT IMPORT_METADATA(...)
+EMITS (filename VARCHAR(200), partition_index VARCHAR(100)) AS
+%scriptclass com.exasol.cloudetl.scriptclasses.ImportMetadata;
+%jar /buckets/bfsdefault/bucket1/cloud-etl.jar;
 /
 
 
@@ -78,7 +95,7 @@ CREATE TABLE SALES (
 
 -- ALTER SESSION SET SCRIPT_OUTPUT_ADDRESS='$MASTER_NODE_IP:3000';
 
-IMPORT INTO SALES_POSITIONS
+IMPORT INTO HADOOP_RETAIL.SALES_POSITIONS
 FROM SCRIPT ETL.IMPORT_HCAT_TABLE WITH
   HCAT_DB         = 'default'
   HCAT_TABLE      = 'sales_positions'
@@ -87,7 +104,7 @@ FROM SCRIPT ETL.IMPORT_HCAT_TABLE WITH
   HDFS_USER       = 'hdfs'
   PARALLELISM     = 'nproc()*10';
 
-IMPORT INTO SALES
+IMPORT INTO HADOOP_RETAIL.SALES
 FROM SCRIPT ETL.IMPORT_HCAT_TABLE WITH
   HCAT_DB         = 'default'
   HCAT_TABLE      = 'sales'
@@ -96,8 +113,37 @@ FROM SCRIPT ETL.IMPORT_HCAT_TABLE WITH
   HDFS_USER       = 'hdfs'
   PARALLELISM     = 'nproc()*10';
 
-SELECT * FROM SALES_POSITIONS LIMIT 10;
-SELECT * FROM SALES LIMIT 10;
+SELECT * FROM HADOOP_RETAIL.SALES_POSITIONS LIMIT 10;
+SELECT * FROM HADOOP_RETAIL.SALES LIMIT 10;
+
+
+DROP SCHEMA IF EXISTS CLOUD_RETAIL CASCADE;
+CREATE SCHEMA CLOUD_RETAIL;
+OPEN SCHEMA CLOUD_RETAIL;
+
+DROP TABLE IF EXISTS SALES_POSITIONS;
+
+CREATE TABLE SALES_POSITIONS (
+  SALES_ID    INTEGER,
+  POSITION_ID SMALLINT,
+  ARTICLE_ID  SMALLINT,
+  AMOUNT      SMALLINT,
+  PRICE       DECIMAL(9,2),
+  VOUCHER_ID  SMALLINT,
+  CANCELED    BOOLEAN
+);
+
+IMPORT INTO CLOUD_RETAIL.SALES_POSITIONS
+FROM SCRIPT ETL.IMPORT_PATH WITH
+  BUCKET_PATH    = 's3a://exa-mo-frankfurt/retail_parquet/sales_positions/*'
+  S3_ACCESS_KEY  = '${aws_access_key}'
+  S3_SECRET_KEY  = '${aws_secret_key}'
+  S3_ENDPOINT    = 's3.eu-central-1.amazonaws.com'
+  PARALLELISM    = 'nproc()*10';
+
+-- MY_REGION is one of AWS regions, for example, eu-central-1
+
+SELECT * FROM CLOUD_RETAIL.SALES_POSITIONS LIMIT 10;
 EOF
 
-exaplus -c 10.0.0.11:8563 -u sys -P ${exa_password} -f /tmp/exa-hadoop-etl.sql
+exaplus -c 10.0.0.11:8563 -u sys -P ${exa_password} -f /tmp/exa-etl-scripts.sql

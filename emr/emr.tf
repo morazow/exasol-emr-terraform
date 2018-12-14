@@ -57,14 +57,6 @@ data "template_file" "exa_etl_import_template" {
 
   vars = {
     exa_password = "${var.exa_db_password}"
-  }
-}
-
-data "template_file" "exa_s3etl_import_template" {
-  template = "${file("${path.module}/templates/exa_s3etl_import.sh.tpl")}"
-
-  vars = {
-    exa_password   = "${var.exa_db_password}"
     aws_access_key = "${var.aws_s3_access_key}"
     aws_secret_key = "${var.aws_s3_secret_key}"
   }
@@ -76,7 +68,6 @@ resource "null_resource" "emr_master_configs" {
   triggers = {
     # Yes, if template file changes
     template_etl   = "${data.template_file.exa_etl_import_template.rendered}"
-    template_s3etl = "${data.template_file.exa_s3etl_import_template.rendered}"
     # Yes, if one these files change
     file_retail    = "${sha1(file("${path.module}/files/retail.sql"))}"
     file_userkeys  = "${sha1(file("${path.module}/files/bootstrap_user_keys.sh"))}"
@@ -103,11 +94,6 @@ resource "null_resource" "emr_master_configs" {
   provisioner "file" {
     content     = "${data.template_file.exa_etl_import_template.rendered}"
     destination = "$HOME/scripts/exa_etl_import.sh"
-  }
-
-  provisioner "file" {
-    content     = "${data.template_file.exa_s3etl_import_template.rendered}"
-    destination = "$HOME/scripts/exa_s3etl_import.sh"
   }
 
   provisioner "file" {
@@ -159,8 +145,7 @@ resource "null_resource" "emr_master_configs" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/scripts/exa_etl_import.sh",
-      "chmod +x $HOME/scripts/exa_s3etl_import.sh"
+      "chmod +x $HOME/scripts/exa_etl_import.sh"
     ]
   }
 
