@@ -23,6 +23,10 @@ variable "release_label" {
   type    = "string"
 }
 
+variable "applications" {
+  type    = "list"
+}
+
 variable "master_type" {
   type    = "string"
 }

@@ -43,6 +43,7 @@ module "emr" {
   environment           = "${var.environment}"
   exa_db_password       = "${var.exa_db_password}"
   release_label         = "${var.emr_release_label}"
+  applications          = ["${var.emr_applications}"]
   master_type           = "${var.emr_master_type}"
   master_count          = "${var.emr_master_count}"
   core_type             = "${var.emr_core_type}"

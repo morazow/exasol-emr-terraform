@@ -48,6 +48,11 @@ variable "emr_release_label" {
   type    = "string"
 }
 
+variable "emr_applications" {
+  type    = "list"
+  default = ["Hadoop", "HCatalog", "Hive", "Spark"]
+}
+
 variable "emr_master_type" {
   type    = "string"
 }

@@ -10,7 +10,7 @@ data "template_file" "emr_configurations" {
 resource "aws_emr_cluster" "emr_cluster" {
   name          = "emr-cluster-${var.project}-${var.environment}"
   release_label = "${var.release_label}"
-  applications  = ["Hadoop", "HCatalog", "Hive", "Hue", "Spark", "Zeppelin"]
+  applications  = ["${var.applications}"]
 
   ec2_attributes {
     key_name = "${var.key_name}"
