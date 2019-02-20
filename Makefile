@@ -39,7 +39,7 @@ run-etl-import:
 	@echo "ETL_END = $$(date '+%H:%M:%S')"
 
 clean:
-	rm -rf terraform.tfplan terraform.tfstate* exasol.tfplan emr.tfplan generated/
+	rm -rf terraform.tfplan terraform.tfstate* exasol.tfplan emr.tfplan generated/ rendered/
 
 
 .PHONY: all init update plan apply destroy exasol emr clean
