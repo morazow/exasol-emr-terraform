@@ -1,12 +1,4 @@
-
-data "template_file" "emr_configurations" {
-  template = "${file("${path.module}/templates/configurations.json.tpl")}"
-
-  vars = {
-    spark_exasol_connector_jar = "/home/hadoop/jars/spark-exasol-connector-assembly-0.1.0.jar"
-  }
-}
-
+# AWS EMR Cluster
 resource "aws_emr_cluster" "emr_cluster" {
   name          = "emr-cluster-${var.project}-${var.environment}"
   release_label = "${var.release_label}"
@@ -40,8 +32,6 @@ resource "aws_emr_cluster" "emr_cluster" {
   }
 
   service_role = "${aws_iam_role.emr_service_role.arn}"
-
-  configurations = "${data.template_file.emr_configurations.rendered}"
 
   tags = {
     Name          = "emr-cluster-${var.project}-${var.environment}"
