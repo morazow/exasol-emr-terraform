@@ -101,13 +101,6 @@ resource "null_resource" "emr_master_configs" {
     destination = "$HOME/scripts/bootstrap_user_keys.sh"
   }
 
-  # Copy jars/ folder contents into remote $HOME/jars/ folder
-
-  provisioner "file" {
-    source      = "${path.module}/jars/"
-    destination = "$HOME/jars"
-  }
-
   # Add authorized ssh public keys
 
   provisioner "remote-exec" {
