@@ -116,3 +116,7 @@ resource "null_resource" "emr_master_provision_files" {
     ]
   }
 }
+
+resource "null_resource" "datagen_waited_on" {
+  depends_on = ["null_resource.emr_master_provision_files"]
+}

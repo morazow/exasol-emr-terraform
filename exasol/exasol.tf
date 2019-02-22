@@ -73,3 +73,7 @@ resource "null_resource" "exasol_upload_jars" {
   EOF
   }
 }
+
+resource "null_resource" "datagen_waited_on" {
+  depends_on = ["null_resource.exasol_upload_jars"]
+}

@@ -76,3 +76,7 @@ variable "aws_s3_access_key" {
 variable "aws_s3_secret_key" {
   type    = "string"
 }
+
+variable "enable_datagen" {
+  type    = "string"
+}
