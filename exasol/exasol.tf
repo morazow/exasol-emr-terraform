@@ -62,6 +62,8 @@ resource "null_resource" "exasol_upload_jars" {
 
   provisioner "local-exec" {
     command = <<EOF
+    sleep 120
+
     URL="http://w:${var.db_password}@${data.aws_instance.exa_first_datanode.public_ip}:2580"
     BUCKET_URL="$URL/utils"
 
