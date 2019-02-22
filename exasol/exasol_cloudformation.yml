@@ -1636,3 +1636,5 @@ Resources:
 Outputs:
   LicenseServerPublicIP:
     Value: !GetAtt [LicenseServer, PublicIp]
+  Datanodes:
+    Value: !Join [',', !GetAtt EC2Instances.Instances]

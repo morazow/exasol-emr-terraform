@@ -19,13 +19,13 @@ OPEN SCHEMA ETL;
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_HCAT_TABLE(...) EMITS (...) AS
 %scriptclass com.exasol.hadoop.scriptclasses.ImportHCatTable;
-%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+%jar /buckets/bfsdefault/utils/hadoop-etl.jar;
 /
 
 CREATE OR REPLACE JAVA SET SCRIPT IMPORT_HIVE_TABLE_FILES(...) EMITS (...) AS
 %env LD_LIBRARY_PATH=/tmp/;
 %scriptclass com.exasol.hadoop.scriptclasses.ImportHiveTableFiles;
-%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+%jar /buckets/bfsdefault/utils/hadoop-etl.jar;
 /
 
 CREATE OR REPLACE JAVA SCALAR SCRIPT HCAT_TABLE_FILES(...) EMITS (
@@ -46,7 +46,7 @@ CREATE OR REPLACE JAVA SCALAR SCRIPT HCAT_TABLE_FILES(...) EMITS (
   debug_address VARCHAR(200))
 AS
 %scriptclass com.exasol.hadoop.scriptclasses.HCatTableFiles;
-%jar /buckets/bfsdefault/bucket1/hadoop-etl.jar;
+%jar /buckets/bfsdefault/utils/hadoop-etl.jar;
 /
 
 DROP SCHEMA IF EXISTS HADOOP_RETAIL CASCADE;

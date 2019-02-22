@@ -47,3 +47,29 @@ resource "null_resource" "exasol_wait" {
   EOF
   }
 }
+
+data "aws_instance" "exa_first_datanode" {
+  instance_id =
+    "${element(split(",", aws_cloudformation_stack.exasol_cluster.outputs["Datanodes"]), 0)}"
+}
+
+resource "null_resource" "exasol_upload_jars" {
+  depends_on = ["null_resource.exasol_wait"]
+
+  triggers {
+    always = "${uuid()}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+    URL="http://w:${var.db_password}@${data.aws_instance.exa_first_datanode.public_ip}:2580"
+    BUCKET_URL="$URL/utils"
+
+    for jar in ${path.root}/artifacts/*.jar
+    do
+      echo "Uploading jar = $jar to bucket utils"
+      curl -X PUT -T "$jar" "$BUCKET_URL/$jar"
+    done
+  EOF
+  }
+}
