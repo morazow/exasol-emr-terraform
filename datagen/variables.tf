@@ -11,6 +11,10 @@ variable "emr_master_public_dns" {
   type    = "string"
 }
 
-variable "depends_on" {
-  type    = "list"
+variable "emr_waited_on" {
+  type    = "string"
+}
+
+variable "exasol_waited_on" {
+  type    = "string"
 }

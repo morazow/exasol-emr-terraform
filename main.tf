@@ -63,5 +63,6 @@ module "datagen" {
   enabled               = "${var.enable_datagen}"
   key_pem_file          = "${module.ssh.deployer_key_pem}"
   emr_master_public_dns = "${module.emr.emr_master_public_dns}"
-  depends_on            = ["${module.emr.datagen_waited_on}","${module.exasol.datagen_waited_on}"]
+  emr_waited_on         = "${module.emr.datagen_waited_on}"
+  exasol_waited_on      = "${module.exasol.datagen_waited_on}"
 }
