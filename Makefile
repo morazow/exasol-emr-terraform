@@ -14,7 +14,9 @@ plan: update
 	terraform plan -var-file config.tfvars -out terraform.tfplan
 
 apply:
+	@echo "[Make Apply Start]: $$(date '+%H:%M:%S')"
 	terraform apply -auto-approve -var-file config.tfvars
+	@echo "[Make Apply End]: $$(date '+%H:%M:%S')"
 
 destroy:
 	terraform plan -destroy -var-file config.tfvars -out terraform.tfplan

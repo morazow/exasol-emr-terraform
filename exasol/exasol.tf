@@ -67,10 +67,10 @@ resource "null_resource" "exasol_upload_jars" {
     URL="http://w:${var.db_password}@${data.aws_instance.exa_first_datanode.public_ip}:2580"
     BUCKET_URL="$URL/utils"
 
-    for jar in ${path.root}/artifacts/*.jar
+    for jar in `ls ${path.root}/artifacts/`
     do
       echo "Uploading jar = $jar to bucket utils"
-      curl -X PUT -T "$jar" "$BUCKET_URL/$jar"
+      curl -X PUT -T "${path.root}/artifacts/$jar" "$BUCKET_URL/$jar"
     done
   EOF
   }
