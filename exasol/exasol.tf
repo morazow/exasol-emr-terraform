@@ -28,3 +28,22 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
     WaitedOn      = "${var.waited_on}"
   }
 }
+
+resource "null_resource" "exasol_wait" {
+  depends_on = ["aws_cloudformation_stack.exasol_cluster"]
+
+  triggers {
+    always = "${uuid()}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+    python ${path.module}/utils/exa_xmlrpc.py \
+      --license-server-address \
+      ${aws_cloudformation_stack.exasol_cluster.outputs["LicenseServerPublicIP"]} \
+      --username admin \
+      --password ${var.db_password} \
+      --buckets utils models
+  EOF
+  }
+}

@@ -1633,3 +1633,6 @@ Resources:
             - "\n"
             - "\n"
     Type: AWS::EC2::Instance
+Outputs:
+  LicenseServerPublicIP:
+    Value: !GetAtt [LicenseServer, PublicIp]
