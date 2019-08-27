@@ -12,7 +12,7 @@ resource "aws_security_group" "base_sg" {
   description = "Allow basic inbound outbound traffic"
   vpc_id      = "${aws_vpc.core.id}"
 
-  tags {
+  tags = {
     Name          = "base-sg-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"
@@ -47,7 +47,7 @@ resource "aws_security_group" "exasol_sg" {
   description = "Allow inbound traffic, use this group only for a exasol node"
   vpc_id      = "${aws_vpc.core.id}"
 
-  tags {
+  tags = {
     Name          = "exasol-sg-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"
@@ -61,7 +61,7 @@ resource "aws_security_group" "emr_sg" {
   description = "Allow inbound traffic, use this group only for a emr node"
   vpc_id      = "${aws_vpc.core.id}"
 
-  tags {
+  tags = {
     Name          = "emr-sg-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"

@@ -35,7 +35,7 @@ resource "aws_security_group" "master_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name          = "emr-master-sg-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"
@@ -73,7 +73,7 @@ resource "aws_security_group" "worker_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name          = "emr-worker-sg-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"

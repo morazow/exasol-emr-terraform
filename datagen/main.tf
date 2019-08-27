@@ -5,7 +5,7 @@
 resource "null_resource" "data_gen_hive_tables" {
   count = "${var.enabled == "true" ? 1 : 0}"
 
-  triggers {
+  triggers = {
     file_retail = "${sha1(file("${path.root}/emr/files/retail.sql"))}"
   }
 
@@ -30,7 +30,7 @@ resource "null_resource" "data_gen_hive_tables" {
 resource "null_resource" "data_gen_etl_import" {
   count = "${var.enabled == "true" ? 1 : 0}"
 
-  triggers {
+  triggers = {
     file_retail = "${sha1(file("${path.root}/emr/files/retail.sql"))}"
   }
 

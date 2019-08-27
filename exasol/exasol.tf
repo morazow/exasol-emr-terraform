@@ -3,9 +3,9 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
   name          = "exasol-stack-${var.project}-${var.environment}"
   capabilities  = ["CAPABILITY_IAM"]
   on_failure    = "DELETE"
-  template_body = "${file("${path.module}/exasol_cloudformation.yml")}"
+  template_body = "${file("${path.module}/cloudformation_template_6.0.4-6.yml")}"
 
-  parameters {
+  parameters = {
     DBSystemName             = "exadb"
     DBPassword               = "${var.db_password}"
     ExasolPassword           = "${var.db_password}"
@@ -32,7 +32,7 @@ resource "aws_cloudformation_stack" "exasol_cluster" {
 resource "null_resource" "exasol_wait" {
   depends_on = ["aws_cloudformation_stack.exasol_cluster"]
 
-  triggers {
+  triggers = {
     always = "${uuid()}"
   }
 
@@ -49,14 +49,13 @@ resource "null_resource" "exasol_wait" {
 }
 
 data "aws_instance" "exa_first_datanode" {
-  instance_id =
-    "${element(split(",", aws_cloudformation_stack.exasol_cluster.outputs["Datanodes"]), 0)}"
+  instance_id = "${element(split(",", aws_cloudformation_stack.exasol_cluster.outputs["Datanodes"]), 0)}"
 }
 
 resource "null_resource" "exasol_upload_jars" {
   depends_on = ["null_resource.exasol_wait"]
 
-  triggers {
+  triggers = {
     always = "${uuid()}"
   }
 

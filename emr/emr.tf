@@ -2,7 +2,7 @@
 resource "aws_emr_cluster" "emr_cluster" {
   name          = "emr-cluster-${var.project}-${var.environment}"
   release_label = "${var.release_label}"
-  applications  = ["${var.applications}"]
+  applications  = "${var.applications}"
 
   ec2_attributes {
     key_name = "${var.key_name}"
@@ -14,14 +14,12 @@ resource "aws_emr_cluster" "emr_cluster" {
     additional_slave_security_groups = "${var.exasol_emr_sg}"
   }
 
-  instance_group {
-    instance_role = "MASTER"
+  master_instance_group {
     instance_type = "${var.master_type}"
     instance_count = "${var.master_count}"
   }
 
-  instance_group {
-    instance_role = "CORE"
+  core_instance_group {
     instance_type = "${var.core_type}"
     instance_count = "${var.core_count}"
     ebs_config {

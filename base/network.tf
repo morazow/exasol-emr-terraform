@@ -42,7 +42,7 @@ resource "aws_internet_gateway" "core_gw" {
 resource "aws_route_table" "core_rt_public" {
   vpc_id    = "${aws_vpc.core.id}"
 
-  tags {
+  tags = {
     Name          = "route-table-core-public-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"
@@ -65,7 +65,7 @@ resource "aws_subnet" "core_subnet_public_1" {
   availability_zone       = "${lookup(var.av_zone_1, var.region)}"
   map_public_ip_on_launch = "true"
 
-  tags {
+  tags = {
     Name          = "subnet-public-1-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"
@@ -79,7 +79,7 @@ resource "aws_subnet" "core_subnet_public_2" {
   availability_zone       = "${lookup(var.av_zone_2, var.region)}"
   map_public_ip_on_launch = "true"
 
-  tags {
+  tags = {
     Name          = "subnet-public-2-${var.project}-${var.environment}"
     Project       = "${var.project}"
     "exa:project" = "${var.project}"

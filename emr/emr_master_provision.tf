@@ -34,7 +34,7 @@ resource "template_dir" "emr_templates" {
 # Trigger provision if anything changes in emr/templates folder
 data "external" "templates_trigger" {
   program = ["${path.module}/utils/dirhash.sh"]
-  query {
+  query = {
     directory = "${path.module}/templates"
   }
 }
@@ -43,7 +43,7 @@ data "external" "templates_trigger" {
 resource "null_resource" "emr_master_provision_templates" {
   depends_on = ["null_resource.emr_master_provision_folders"]
 
-  triggers {
+  triggers = {
     md5 = "${data.external.templates_trigger.result["checksum"]}"
   }
 
@@ -72,7 +72,7 @@ resource "null_resource" "emr_master_provision_templates" {
 # Trigger provision if anything changes in emr/files folder
 data "external" "files_trigger" {
   program = ["${path.module}/utils/dirhash.sh"]
-  query {
+  query = {
     directory = "${path.module}/files"
   }
 }
@@ -81,7 +81,7 @@ data "external" "files_trigger" {
 resource "null_resource" "emr_master_provision_files" {
   depends_on = ["null_resource.emr_master_provision_folders"]
 
-  triggers {
+  triggers = {
     md5 = "${data.external.files_trigger.result["checksum"]}"
   }
 

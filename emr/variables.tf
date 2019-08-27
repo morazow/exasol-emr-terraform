@@ -24,7 +24,7 @@ variable "release_label" {
 }
 
 variable "applications" {
-  type    = "list"
+  type    = list(string)
 }
 
 variable "master_type" {
