@@ -19,29 +19,53 @@ module "base" {
 }
 
 module "exasol" {
-  source                = "./exasol"
-  project               = var.project
-  environment           = var.environment
-  image_id              = var.exa_image_id
-  license_file_path     = var.exa_license_file_path
-  db_password           = var.exa_db_password
-  db_node_count         = var.exa_db_node_count
-  db_node_type          = var.exa_db_node_type
-  db_replication_factor = var.exa_db_replication_factor
-  db_standby_node       = var.exa_db_standby_node
-  key_name              = module.ssh.deployer_key_name
-  core_vpc              = module.base.core_vpc
-  base_sg               = module.base.base_sg
-  public_subnet_1       = module.base.public_subnet_1
-  exasol_sg             = module.base.exasol_sg
-  waited_on             = module.base.exasol_waited_on
+  source                          = "../terraform-aws-exasol"
+  project                         = var.project
+  owner                           = var.owner
+  environment                     = var.environment
+  cluster_name                    = var.exasol_cluster_name
+  database_name                   = var.exasol_database_name
+  ami_image_name                  = var.exasol_image_name
+  sys_user_password               = var.exasol_sys_password
+  admin_user_password             = var.exasol_admin_password
+  management_server_instance_type = var.exasol_management_server_type
+  datanode_count                  = var.exasol_datanode_count
+  datanode_instance_type          = var.exasol_datanode_type
+  standbynode_count               = var.exasol_standbynode_count
+  key_pair_name                   = module.ssh.deployer_key_name
+  subnet_id                       = module.base.public_subnet_1
+  security_group                  = module.base.exasol_sg
+  waited_on                       = module.base.exasol_waited_on
+}
+
+resource "null_resource" "exasol_upload_artifacts" {
+  depends_on = ["module.exasol.exasol_waited_on"]
+
+  triggers = {
+    always = "${uuid()}"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+    sleep 120
+
+    URL="http://w:${var.exasol_admin_password}@${module.exasol.first_datanode_ip}:2580"
+    BUCKET_URL="$URL/artifacts"
+
+    for a in `ls ${path.root}/artifacts/`
+    do
+      echo "Uploading artifact: $a"
+      curl -X PUT -T "${path.root}/artifacts/$a" "$BUCKET_URL/$a"
+    done
+  EOF
+  }
 }
 
 module "emr" {
   source                = "./emr"
   project               = var.project
   environment           = var.environment
-  exa_db_password       = var.exa_db_password
+  exa_db_password       = var.exasol_sys_password
   release_label         = var.emr_release_label
   applications          = var.emr_applications
   master_type           = var.emr_master_type
@@ -62,8 +86,8 @@ module "datagen" {
   source                = "./datagen"
   enabled               = var.enable_datagen
   key_pem_file          = module.ssh.deployer_key_pem
-  emr_master_public_dns = module.emr.emr_master_public_dns
+  emr_master_public_dns = module.emr.master_public_dns
   emr_waited_on         = module.emr.datagen_waited_on
-  exasol_waited_on      = module.exasol.datagen_waited_on
+  exasol_waited_on      = "${null_resource.exasol_upload_artifacts.id}"
 }
 

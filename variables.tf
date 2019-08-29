@@ -11,35 +11,47 @@ variable "project" {
   type = string
 }
 
+variable "owner" {
+  type = string
+}
+
 variable "environment" {
   type = string
 }
 
-variable "exa_image_id" {
+variable "exasol_database_name" {
   type = string
 }
 
-variable "exa_license_file_path" {
+variable "exasol_cluster_name" {
   type = string
 }
 
-variable "exa_db_password" {
+variable "exasol_image_name" {
   type = string
 }
 
-variable "exa_db_node_count" {
+variable "exasol_sys_password" {
   type = string
 }
 
-variable "exa_db_node_type" {
+variable "exasol_admin_password" {
   type = string
 }
 
-variable "exa_db_replication_factor" {
+variable "exasol_management_server_type" {
   type = string
 }
 
-variable "exa_db_standby_node" {
+variable "exasol_datanode_count" {
+  type = string
+}
+
+variable "exasol_datanode_type" {
+  type = string
+}
+
+variable "exasol_standbynode_count" {
   type = string
 }
 

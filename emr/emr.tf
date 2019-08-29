@@ -39,3 +39,10 @@ resource "aws_emr_cluster" "emr_cluster" {
     WaitedOn      = "${var.waited_on}"
   }
 }
+
+data "aws_instance" "emr_master" {
+  filter {
+    name   = "dns-name"
+    values = ["${aws_emr_cluster.emr_cluster.master_public_dns}"]
+  }
+}
